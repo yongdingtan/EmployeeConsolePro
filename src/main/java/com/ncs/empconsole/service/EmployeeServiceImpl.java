@@ -1,6 +1,7 @@
 package com.ncs.empconsole.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 	}
 
 	@Override
-	public Employee getEmployeeDetails(int searchedEmpId) {
+	public Employee getEmployeeDetails(int searchedEmpId) throws IllegalArgumentException,NoSuchElementException {
 		
 		Employee returnedEmployee =  employeeRepository.getById(searchedEmpId);
 		

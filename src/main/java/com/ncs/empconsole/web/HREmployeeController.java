@@ -1,6 +1,7 @@
 package com.ncs.empconsole.web;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,10 +40,16 @@ public class HREmployeeController {
 
 	//Get One Employee by ID
 	@GetMapping("/employee/id/{id}")
-	public Employee getEmployeeById(@PathVariable int id)
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable int id)throws IllegalArgumentException,NoSuchElementException
 	{
 		System.out.println("path variable : "+id);
-		return empService.getEmployeeDetails(id);
+		try {
+			Employee output = empService.getEmployeeDetails(id);
+			return new ResponseEntity<Employee>(output,HttpStatus.OK);
+		} catch (Exception e) {
+			System.out.println(" --->> inside catch ");
+			throw new NoSuchElementException(e.getMessage());
+		}
 	}
 	
 	//Get One Employee by Name
@@ -73,7 +80,7 @@ public class HREmployeeController {
 	}
 	
 	//Get List of Employee with Salary within Range
-	@GetMapping("/employeesalary")//localhost:8080/empconsole/hr/employeesalary?range1=1000&range2=5000
+	@GetMapping("/employeesalary")
 	public List<Employee> getEmployeeBasedOnRange(@RequestParam int range1, @RequestParam int range2)
 	{
 		List<Employee> empList = empService.getAllEmployees(range1, range2);
@@ -108,10 +115,14 @@ public class HREmployeeController {
 	@PostMapping("/employee")
 	public ResponseEntity<Employee> addEmployee(@RequestBody Employee e)throws OutofRangeSalaryException
 	{
-		
+		if(e.getSalary() > 0 ) {
 		Employee savedEmployee = empService.addEmployee(e);
-		
 		return new ResponseEntity<Employee>(savedEmployee,HttpStatus.OK);
+		}
+		else
+		{
+			throw new OutofRangeSalaryException("Invalid Salary Range", e.getSalary(),e.getDesignation());
+		}
 		
 	}
 	
