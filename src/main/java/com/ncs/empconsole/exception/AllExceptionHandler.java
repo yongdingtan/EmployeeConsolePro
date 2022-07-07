@@ -63,6 +63,18 @@ public class AllExceptionHandler
 		return new ResponseEntity<ExceptionTemplate>(template,HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler
+	public ResponseEntity<ExceptionTemplate> handleInvalidEndDateException(InvalidEndDateException e)
+	{
+		System.out.println("--->> Inside Exeption Handler : Out of End Date Range ");
+		ExceptionTemplate template = new ExceptionTemplate();
+		template.setMsg(e.getMessage());
+		template.setUserInput(e.toString());
+		template.setDateTime(LocalDateTime.now());
+		
+		return new ResponseEntity<ExceptionTemplate>(template,HttpStatus.BAD_REQUEST);
+	}
+	
 	
 
 }

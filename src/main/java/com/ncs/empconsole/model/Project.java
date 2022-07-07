@@ -1,6 +1,7 @@
 package com.ncs.empconsole.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,8 +19,8 @@ public class Project implements Serializable,Comparable<Project> {
 	private int projectNumber;
 	private String projectName;
 	private int cost;
-	private String startdate;
-	private String enddate;
+	private Date startdate;
+	private Date enddate;
 	private String comments;
 	private String projectHeadEmail;
 	
@@ -28,7 +29,7 @@ public class Project implements Serializable,Comparable<Project> {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Project(int projectNumber, String projectName, int cost, String startdate, String enddate, String comments,
+	public Project(int projectNumber, String projectName, int cost, Date startdate, Date enddate, String comments,
 			String projectHeadEmail) {
 		super();
 		this.projectNumber = projectNumber;
@@ -70,19 +71,19 @@ public class Project implements Serializable,Comparable<Project> {
 		this.cost = cost;
 	}
 
-	public String getStartdate() {
+	public Date getStartdate() {
 		return startdate;
 	}
 
-	public void setStartdate(String startdate) {
+	public void setStartdate(Date startdate) {
 		this.startdate = startdate;
 	}
 
-	public String getEnddate() {
+	public Date getEnddate() {
 		return enddate;
 	}
 
-	public void setEnddate(String enddate) {
+	public void setEnddate(Date enddate) {
 		this.enddate = enddate;
 	}
 
