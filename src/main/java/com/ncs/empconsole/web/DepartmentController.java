@@ -22,6 +22,7 @@ public class DepartmentController {
 	
 	@Autowired
 	DepartmentService departmentService;
+	@Autowired
 	EmployeeService empService;
 	
 	public DepartmentController()
