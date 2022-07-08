@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ncs.empconsole.exception.OutofRangeSalaryException;
+import com.ncs.empconsole.model.Department;
 import com.ncs.empconsole.model.Employee;
 import com.ncs.empconsole.repository.EmployeeRepository;
 import com.ncs.empconsole.util.ValidateEmployee;
@@ -78,6 +79,18 @@ public class EmployeeServiceImpl implements EmployeeService{
 	@Override
 	public boolean deleteEmployee(int searchEmpId){
 		return employeeRepository.deleteEmployee(searchEmpId);
+	}
+	
+	@Override
+	public Employee updateDepartment(int searchEmpId, Department department) {
+		
+		Employee e = getEmployeeDetails(searchEmpId);
+		e.setDepartment(department);
+		
+		employeeRepository.save(e);
+		
+		System.out.println(" -->> inside serviceImpl :- "+e);
+		return e;
 	}
 
 	

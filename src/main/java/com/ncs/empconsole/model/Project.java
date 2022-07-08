@@ -2,12 +2,18 @@ package com.ncs.empconsole.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties("hibernateLazyInitializer")
@@ -24,13 +30,19 @@ public class Project implements Serializable,Comparable<Project> {
 	private String comments;
 	private String projectHeadEmail;
 	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="all_employees")
+	@JsonBackReference
+	private Set<Employee> allEmployees;
+	
 	public Project() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+	
 	public Project(int projectNumber, String projectName, int cost, Date startdate, Date enddate, String comments,
-			String projectHeadEmail) {
+			String projectHeadEmail, Set<Employee> allEmployees) {
 		super();
 		this.projectNumber = projectNumber;
 		this.projectName = projectName;
@@ -39,7 +51,19 @@ public class Project implements Serializable,Comparable<Project> {
 		this.enddate = enddate;
 		this.comments = comments;
 		this.projectHeadEmail = projectHeadEmail;
+		this.allEmployees = allEmployees;
 	}
+
+
+	public Set<Employee> getAllEmployees() {
+		return allEmployees;
+	}
+
+
+	public void setAllEmployees(Set<Employee> allEmployees) {
+		this.allEmployees = allEmployees;
+	}
+
 
 	public Project(int projectNumber, String projectName) {
 		super();
@@ -104,25 +128,17 @@ public class Project implements Serializable,Comparable<Project> {
 	}
 
 	@Override
-	public String toString() {
-		return "Project [projectNumber=" + projectNumber + ", projectName=" + projectName + ", cost=" + cost
-				+ ", startdate=" + startdate + ", enddate=" + enddate + ", comments=" + comments + ", projectHeadEmail="
-				+ projectHeadEmail + "]";
+	public int compareTo(Project p) {
+		return this.projectNumber - p.getProjectNumber();
 	}
+
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
-		result = prime * result + cost;
-		result = prime * result + ((enddate == null) ? 0 : enddate.hashCode());
-		result = prime * result + ((projectHeadEmail == null) ? 0 : projectHeadEmail.hashCode());
-		result = prime * result + ((projectName == null) ? 0 : projectName.hashCode());
-		result = prime * result + projectNumber;
-		result = prime * result + ((startdate == null) ? 0 : startdate.hashCode());
-		return result;
+		return Objects.hash(allEmployees, comments, cost, enddate, projectHeadEmail, projectName, projectNumber,
+				startdate);
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -133,41 +149,19 @@ public class Project implements Serializable,Comparable<Project> {
 		if (getClass() != obj.getClass())
 			return false;
 		Project other = (Project) obj;
-		if (comments == null) {
-			if (other.comments != null)
-				return false;
-		} else if (!comments.equals(other.comments))
-			return false;
-		if (cost != other.cost)
-			return false;
-		if (enddate == null) {
-			if (other.enddate != null)
-				return false;
-		} else if (!enddate.equals(other.enddate))
-			return false;
-		if (projectHeadEmail == null) {
-			if (other.projectHeadEmail != null)
-				return false;
-		} else if (!projectHeadEmail.equals(other.projectHeadEmail))
-			return false;
-		if (projectName == null) {
-			if (other.projectName != null)
-				return false;
-		} else if (!projectName.equals(other.projectName))
-			return false;
-		if (projectNumber != other.projectNumber)
-			return false;
-		if (startdate == null) {
-			if (other.startdate != null)
-				return false;
-		} else if (!startdate.equals(other.startdate))
-			return false;
-		return true;
+		return Objects.equals(allEmployees, other.allEmployees) && Objects.equals(comments, other.comments)
+				&& cost == other.cost && Objects.equals(enddate, other.enddate)
+				&& Objects.equals(projectHeadEmail, other.projectHeadEmail)
+				&& Objects.equals(projectName, other.projectName) && projectNumber == other.projectNumber
+				&& Objects.equals(startdate, other.startdate);
 	}
 
+
 	@Override
-	public int compareTo(Project p) {
-		return this.projectNumber - p.getProjectNumber();
+	public String toString() {
+		return "Project [projectNumber=" + projectNumber + ", projectName=" + projectName + ", cost=" + cost
+				+ ", startdate=" + startdate + ", enddate=" + enddate + ", comments=" + comments + ", projectHeadEmail="
+				+ projectHeadEmail + ", allEmployees=" + allEmployees + "]";
 	}
 
 	

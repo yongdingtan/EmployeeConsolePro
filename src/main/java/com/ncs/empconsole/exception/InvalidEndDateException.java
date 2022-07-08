@@ -5,16 +5,16 @@ import java.sql.Date;
 public class InvalidEndDateException extends Exception {
 
 	private String errorMsg;
-	private int projectNumber;
+	private String projectName;
 	private Date endDate;
 	public InvalidEndDateException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public InvalidEndDateException(String errorMsg, int projectNumber, Date endDate) {
+	public InvalidEndDateException(String errorMsg, String projectName, Date endDate) {
 		super();
 		this.errorMsg = errorMsg;
-		this.projectNumber = projectNumber;
+		this.projectName = projectName;
 		this.endDate = endDate;
 	}
 	public String getErrorMsg() {
@@ -23,11 +23,12 @@ public class InvalidEndDateException extends Exception {
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
-	public int getProjectNumber() {
-		return projectNumber;
+	
+	public String getProjectName() {
+		return projectName;
 	}
-	public void setProjectNumber(int projectNumber) {
-		this.projectNumber = projectNumber;
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 	public Date getEndDate() {
 		return endDate;
@@ -37,7 +38,7 @@ public class InvalidEndDateException extends Exception {
 	}
 	@Override
 	public String toString() {
-		return "InvalidEndDateException [errorMsg=" + errorMsg + ", projectNumber=" + projectNumber + ", endDate="
+		return "InvalidEndDateException [errorMsg=" + errorMsg + ", projectName=" + projectName + ", endDate="
 				+ endDate + "]";
 	}
 	

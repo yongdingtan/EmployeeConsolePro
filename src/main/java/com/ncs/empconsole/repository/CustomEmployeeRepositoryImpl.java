@@ -80,6 +80,18 @@ public class CustomEmployeeRepositoryImpl implements CustomEmployeeRepository{
 		return (x==1)?true:false;
 	}
 	
+	@Override
+	@Transactional
+	public boolean updateDepartment(int searchEmpId, int dCode) {
+		String query = "Update Employee set department = :deptCode where empId = :eid";
+		Query q = springDataJPA.createQuery(query);
+		q.setParameter("deptCode", dCode);
+		q.setParameter("eid", searchEmpId);
+		int x = q.executeUpdate();
+		
+		
+		return (x==1)?true:false;
+	}
 	
 
 }

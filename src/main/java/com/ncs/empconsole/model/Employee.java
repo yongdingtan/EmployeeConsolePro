@@ -5,10 +5,12 @@ import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
@@ -23,31 +25,47 @@ public class Employee implements Comparable<Employee>,Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int emp_id;
 	private String name;
-	@OneToOne(cascade = CascadeType.ALL) @JoinColumn(name = "project_info", referencedColumnName = "projectNumber") 
-	private Project project_info;
 	private String email;
 	private int bank_account;
 	private String address;
 	private String designation;
 	private int salary;
-
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="department")
+	private Department department;
+	
+	@ManyToOne(fetch = FetchType.LAZY) 
+	@JoinColumn(name = "project_info") 
+	private Project project_info;
+	
 	
 	public Employee() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Employee(int emp_id, String name, Project project_info, String email, int bank_account, String address,
-			String designation, int salary) {
+
+	public Employee(int emp_id, String name, String email, int bank_account, String address, String designation,
+			int salary, Department department, Project project_info) {
 		super();
 		this.emp_id = emp_id;
 		this.name = name;
-		this.project_info = project_info;
 		this.email = email;
 		this.bank_account = bank_account;
 		this.address = address;
 		this.designation = designation;
 		this.salary = salary;
+		this.department = department;
+		this.project_info = project_info;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+	
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 	public int getEmpId() {
@@ -101,19 +119,19 @@ public class Employee implements Comparable<Employee>,Serializable{
 	public void setSalary(int salary) {
 		this.salary = salary;
 	}
+	
 	@Override
-	public String toString() {
-		return "Employee [empId=" + emp_id + ", name=" + name + ", projectInfo=" + project_info + ", email=" + email
-				+ ", bankAccount=" + bank_account + ", address=" + address + ", designation=" + designation + ", salary="
-				+ salary + "]";
+	public int compareTo(Employee e2) {
+		
+		return this.getEmpId() - e2.getEmpId();
 	}
-	
-	
-	
+
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, bank_account, designation, email, emp_id, name, project_info, salary);
+		return Objects.hash(address, bank_account, department, designation, email, emp_id, name, project_info, salary);
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -125,15 +143,19 @@ public class Employee implements Comparable<Employee>,Serializable{
 			return false;
 		Employee other = (Employee) obj;
 		return Objects.equals(address, other.address) && bank_account == other.bank_account
-				&& Objects.equals(designation, other.designation) && Objects.equals(email, other.email)
-				&& emp_id == other.emp_id && Objects.equals(name, other.name)
+				&& Objects.equals(department, other.department) && Objects.equals(designation, other.designation)
+				&& Objects.equals(email, other.email) && emp_id == other.emp_id && Objects.equals(name, other.name)
 				&& Objects.equals(project_info, other.project_info) && salary == other.salary;
 	}
+
+
 	@Override
-	public int compareTo(Employee e2) {
-		
-		return this.getEmpId() - e2.getEmpId();
+	public String toString() {
+		return "Employee [emp_id=" + emp_id + ", name=" + name + ", email=" + email + ", bank_account=" + bank_account
+				+ ", address=" + address + ", designation=" + designation + ", salary=" + salary + ", department="
+				+ department + ", project_info=" + project_info + "]";
 	}
+	
 	
 	
 	

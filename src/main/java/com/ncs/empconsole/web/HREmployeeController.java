@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ncs.empconsole.dto.HREmployeeResponseDTO;
 import com.ncs.empconsole.exception.OutofRangeSalaryException;
 import com.ncs.empconsole.model.Employee;
 import com.ncs.empconsole.service.EmployeeService;
+import com.ncs.empconsole.util.HREmployeeDTOConversion;
 
 @RestController
 @RequestMapping("/empconsole/hr")
@@ -40,12 +42,13 @@ public class HREmployeeController {
 
 	//Get One Employee by ID
 	@GetMapping("/employee/id/{id}")
-	public ResponseEntity<Employee> getEmployeeById(@PathVariable int id)throws IllegalArgumentException,NoSuchElementException
+	public ResponseEntity<HREmployeeResponseDTO> getEmployeeById(@PathVariable int id)throws IllegalArgumentException,NoSuchElementException
 	{
 		System.out.println("path variable : "+id);
 		try {
 			Employee output = empService.getEmployeeDetails(id);
-			return new ResponseEntity<Employee>(output,HttpStatus.OK);
+			HREmployeeResponseDTO dto = HREmployeeDTOConversion.convertToHRReponse(output);
+			return new ResponseEntity<HREmployeeResponseDTO>(dto,HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println(" --->> inside catch ");
 			throw new NoSuchElementException(e.getMessage());

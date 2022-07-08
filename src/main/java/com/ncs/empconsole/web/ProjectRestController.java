@@ -2,6 +2,7 @@ package com.ncs.empconsole.web;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ncs.empconsole.exception.InvalidEndDateException;
+import com.ncs.empconsole.model.Employee;
 import com.ncs.empconsole.model.Project;
+import com.ncs.empconsole.service.EmployeeService;
 import com.ncs.empconsole.service.ProjectService;
 
 @RestController
@@ -26,6 +29,7 @@ public class ProjectRestController {
 	
 	@Autowired
 	ProjectService projectService;
+	EmployeeService empService;
 	
 	public ProjectRestController()
 	{
@@ -74,14 +78,14 @@ public class ProjectRestController {
 	public ResponseEntity<Project> addProject(@RequestBody Project p) throws InvalidEndDateException
 	{
 		Date date = new Date(System.currentTimeMillis());
-		if(p.getEnddate().compareTo(date)>0)
+		if(p.getEnddate().compareTo(date)>0 || p.getStartdate().compareTo(p.getEnddate())<0)
 		{
 			Project savedProject = projectService.addProject(p);
 			return new ResponseEntity<Project>(savedProject,HttpStatus.OK);
 		}
 		else
 		{
-			throw new InvalidEndDateException("End date cannot be earlier than current date", p.getProjectNumber(), p.getEnddate());
+			throw new InvalidEndDateException("End Date does not fit within time frame", p.getProjectName(), p.getEnddate());
 		}
 	}
 	
@@ -94,5 +98,33 @@ public class ProjectRestController {
 		else System.out.println("Failed");
 		return status;
 	}
+	
+	//Allocate Employee to Project
+	@PutMapping("/project/{id}")
+	public Set<Employee> allocateEmployeeToProject(@PathVariable int id, @RequestParam int empId)
+	{
+		 Set<Employee> workingEmployee = null;
+		 
+		  
+		 Employee e = empService.getEmployeeDetails(empId);
+		 Project p = projectService.getProjectDetails(id);
+		 
+		 // write exception handling code if e or p is null
+		 
+		 if(e != null & p != null)
+		 {
+			 workingEmployee = projectService.allocateProject(p, e);
+		 }
+		 
+		 return workingEmployee;
+	}
+	
+	//Get all employees in Project
+	@GetMapping("/project/{id}/employees")
+	public Set<Employee> getAllWorkingEmployees(@PathVariable int id)
+	{
+		return projectService.getProjectResource(id);
+	}
+	
 
 }

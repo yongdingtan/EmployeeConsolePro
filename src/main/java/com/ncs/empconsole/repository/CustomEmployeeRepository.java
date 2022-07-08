@@ -12,5 +12,6 @@ public interface CustomEmployeeRepository {
 	public boolean updateProject(int searchEmpId,int projectId);
 	public boolean updateBankAccount(int searchEmpId, int bankAccount);
 	public boolean deleteEmployee(int searchEmpId);
+	public boolean updateDepartment(int searchEmpId, int dCode);
 	
 }
